@@ -50,7 +50,7 @@ export const ROLE_ROUTES = {
     base: '/admin',
     pages: {
       admin_overview: 'overview',
-      admin_programmes: 'programmes',
+      admin_programmes: 'courses',
       admin_nominations: 'nominations',
       admin_timetable: 'timetable',
       admin_certification: 'certification',

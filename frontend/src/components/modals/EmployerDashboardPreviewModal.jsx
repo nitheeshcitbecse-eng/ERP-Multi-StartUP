@@ -3,8 +3,8 @@ import { X, Building, Search, ShieldCheck, UserCheck, Send } from 'lucide-react'
 import { useApp, useData } from '../../context/SystemStateContext';
 
 export const EmployerDashboardPreviewModal = () => {
-  const { trainee, skills } = useData();
-  const { activeModal, closeModal } = useApp();
+  const { trainee } = useData();
+  const { skills, activeModal, closeModal } = useApp();
   const [invited, setInvited] = useState(false);
 
   if (activeModal !== 'employer_preview') return null;
@@ -72,9 +72,9 @@ export const EmployerDashboardPreviewModal = () => {
           </div>
 
           <div className="space-y-1.5 pt-2 border-t border-slate-100">
-            <span className="text-[10px] uppercase font-bold text-slate-400 block">Cryptographically Verified Competencies</span>
+            <span className="text-[10px] uppercase font-bold text-slate-400 block">Completed Courses</span>
             <div className="flex flex-wrap gap-1.5">
-              {skills.filter(s => s.status === 'verified').map(s => (
+              {skills.filter(s => s.status === 'completed').map(s => (
                 <span key={s.id} className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-900 text-xs font-semibold border border-emerald-200 flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-emerald-600" /> {s.name} ({s.proficiency}%)
                 </span>

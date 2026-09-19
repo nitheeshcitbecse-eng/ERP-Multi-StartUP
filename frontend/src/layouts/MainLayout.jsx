@@ -21,7 +21,7 @@ import { TrainerResourceModal } from '../components/modals/TrainerResourceModal'
 
 // Admin Modals
 import { NominationConflictModal } from '../components/modals/NominationConflictModal';
-import { CreateProgrammeModal } from '../components/modals/CreateProgrammeModal';
+import { CourseEditorModal } from '../components/modals/CourseEditorModal';
 import { ScheduleSessionModal } from '../components/modals/ScheduleSessionModal';
 import { ResourceRequestModal } from '../components/modals/ResourceRequestModal';
 import { GlobalSearchModal } from '../components/modals/GlobalSearchModal';
@@ -113,7 +113,7 @@ export const MainLayout = () => {
 
       {/* Admin Modals */}
       <NominationConflictModal />
-      <CreateProgrammeModal />
+      <CourseEditorModal />
       <ScheduleSessionModal />
       <ResourceRequestModal />
       <GlobalSearchModal />

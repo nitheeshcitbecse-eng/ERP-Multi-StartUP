@@ -1,0 +1,398 @@
+{
+  "admin": {
+    "id": "ADM-2026-CHN-014",
+    "name": "Raga",
+    "role": "Institution Administrator",
+    "adminId": "NCCT-ICM-CHN-014",
+    "instituteName": "ICM Chennai",
+    "instituteCode": "NCCT-ICM-CHN",
+    "avatarUrl": "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?cs=srgb&dl=pexels-moh-adbelghaffar-771742.jpg&fm=jpg",
+    "email": "Raga@ncct.gov.in",
+    "phone": "+91 94440 12345",
+    "status": "Operational"
+  },
+  "demandSignals": [
+    {
+      "id": "DEM-01",
+      "programmeName": "Cooperative Digital Operations & Cyber Security",
+      "demandLevel": "High",
+      "currentCapacity": 120,
+      "requiredCapacity": 165,
+      "gapOrSurplus": -45,
+      "recommendation": "Add 2 new batches at ICM Chennai & RICM Hyderabad."
+    },
+    {
+      "id": "DEM-02",
+      "programmeName": "Dairy Cooperative Leadership & Supply Chain",
+      "demandLevel": "Medium",
+      "currentCapacity": 80,
+      "requiredCapacity": 62,
+      "gapOrSurplus": 18,
+      "recommendation": "Reallocate 18 surplus seats to RICM Bengaluru."
+    },
+    {
+      "id": "DEM-03",
+      "programmeName": "PACS Financial Management & Computerisation",
+      "demandLevel": "High",
+      "currentCapacity": 100,
+      "requiredCapacity": 140,
+      "gapOrSurplus": -40,
+      "recommendation": "Schedule additional evening module at ICM Chennai."
+    }
+  ],
+  "hostelAllocations": [
+    {
+      "id": "HA-01",
+      "traineeName": "Arun Kumar",
+      "programme": "CMDO-B04",
+      "batch": "B04",
+      "checkIn": "31 Aug 2026",
+      "checkOut": "01 Oct 2026",
+      "block": "Block A",
+      "roomNo": "A-204",
+      "bedNo": "Bed 1",
+      "status": "Allocated"
+    },
+    {
+      "id": "HA-02",
+      "traineeName": "Priya S.",
+      "programme": "CMDO-B04",
+      "batch": "B04",
+      "checkIn": "31 Aug 2026",
+      "checkOut": "01 Oct 2026",
+      "block": "Block B",
+      "roomNo": "B-108",
+      "bedNo": "Bed 2",
+      "status": "Allocated"
+    },
+    {
+      "id": "HA-03",
+      "traineeName": "Rajesh M.",
+      "programme": "PFL-B02",
+      "batch": "B02",
+      "checkIn": "04 Sep 2026",
+      "checkOut": "26 Sep 2026",
+      "block": "Block A",
+      "roomNo": "A-310",
+      "bedNo": "Bed 1",
+      "status": "Checkout Alert"
+    }
+  ],
+  "hostelBlocks": [
+    {
+      "id": "BLK-A",
+      "blockName": "Block A (Main Men's Hostel)",
+      "totalBeds": 100,
+      "occupiedBeds": 96,
+      "availableBeds": 4,
+      "occupancyRate": 96,
+      "status": "Critical"
+    },
+    {
+      "id": "BLK-B",
+      "blockName": "Block B (Women's Hostel)",
+      "totalBeds": 80,
+      "occupiedBeds": 70,
+      "availableBeds": 10,
+      "occupancyRate": 88,
+      "status": "High"
+    },
+    {
+      "id": "BLK-C",
+      "blockName": "Block C (Executive Trainee Annexe)",
+      "totalBeds": 60,
+      "occupiedBeds": 50,
+      "availableBeds": 10,
+      "occupancyRate": 84,
+      "status": "Optimal"
+    }
+  ],
+  "logisticsChecklist": [
+    {
+      "id": "LOG-01",
+      "category": "Training Materials",
+      "title": "HDCM Module Handbooks & Excel Templates",
+      "statusText": "12 / 14 Batches Fully Prepared",
+      "status": "Ready",
+      "metric": "86% Ready"
+    },
+    {
+      "id": "LOG-02",
+      "category": "Transport",
+      "title": "Classroom & Field Visit Shuttle Bus Routes",
+      "statusText": "6 / 7 Routes Confirmed & Dispatched",
+      "status": "Ready",
+      "metric": "6 Buses"
+    },
+    {
+      "id": "LOG-03",
+      "category": "Meals",
+      "title": "Mess Catering & Dietary Pass Requirement",
+      "statusText": "Today's Meal Requirement: 184 Meals",
+      "status": "Ready",
+      "metric": "184 Meals"
+    },
+    {
+      "id": "LOG-04",
+      "category": "Equipment",
+      "title": "Interactive Projectors & Kiosks",
+      "statusText": "2 Projector Maintenance Alerts in Room 4",
+      "status": "Attention",
+      "metric": "2 Alerts"
+    }
+  ],
+  "networkInstitutes": [
+    {
+      "id": "ICM-CHN",
+      "name": "ICM Chennai",
+      "code": "NCCT-ICM-CHN-014",
+      "location": "Chennai, Tamil Nadu",
+      "type": "ICM",
+      "activeProgrammes": 12,
+      "capacityUtilisation": 82,
+      "demandStatus": "Healthy",
+      "totalSeats": 480,
+      "filledSeats": 394,
+      "status": "Healthy"
+    },
+    {
+      "id": "RICM-HYD",
+      "name": "RICM Hyderabad",
+      "code": "NCCT-RICM-HYD-004",
+      "location": "Hyderabad, Telangana",
+      "type": "RICM",
+      "activeProgrammes": 14,
+      "capacityUtilisation": 96,
+      "demandStatus": "High Demand",
+      "totalSeats": 560,
+      "filledSeats": 538,
+      "status": "High Demand"
+    },
+    {
+      "id": "RICM-BLR",
+      "name": "RICM Bengaluru",
+      "code": "NCCT-RICM-BLR-002",
+      "location": "Bengaluru, Karnataka",
+      "type": "RICM",
+      "activeProgrammes": 9,
+      "capacityUtilisation": 61,
+      "demandStatus": "Available",
+      "totalSeats": 420,
+      "filledSeats": 256,
+      "status": "Available"
+    },
+    {
+      "id": "VAMNICOM-PNE",
+      "name": "VAMNICOM Pune",
+      "code": "NCCT-VAM-PNE-001",
+      "location": "Pune, Maharashtra",
+      "type": "VAMNICOM",
+      "activeProgrammes": 18,
+      "capacityUtilisation": 88,
+      "demandStatus": "Healthy",
+      "totalSeats": 720,
+      "filledSeats": 634,
+      "status": "Healthy"
+    }
+  ],
+  "nominationConflicts": [
+    {
+      "id": "NOM-CONF-01",
+      "traineeName": "Priya S.",
+      "digitalId": "NCCT-TR-2026-009142",
+      "programmeName": "Cooperative Digital Operations",
+      "instituteName": "ICM Chennai",
+      "nominationStatus": "Conflict",
+      "conflictReason": "Trainee already nominated at RICM Hyderabad for PACS Financial Management.",
+      "existingProgramme": {
+        "institute": "RICM Hyderabad",
+        "programme": "PACS Financial Management",
+        "dates": "12 Sep – 30 Sep 2026"
+      },
+      "newProgramme": {
+        "institute": "ICM Chennai",
+        "programme": "Cooperative Digital Operations",
+        "dates": "15 Sep – 05 Oct 2026"
+      }
+    },
+    {
+      "id": "NOM-CONF-02",
+      "traineeName": "Arun Kumar",
+      "digitalId": "NCCT-TR-2026-004281",
+      "programmeName": "Cooperative Management & Digital Operations",
+      "instituteName": "ICM Chennai",
+      "nominationStatus": "Confirmed"
+    },
+    {
+      "id": "NOM-CONF-03",
+      "traineeName": "Karthik R.",
+      "digitalId": "NCCT-TR-2026-008412",
+      "programmeName": "PACS Management & Computerisation",
+      "instituteName": "RICM Bengaluru",
+      "nominationStatus": "Pending",
+      "conflictReason": "Seat capacity pending verification at target institute."
+    }
+  ],
+  "operationalSignals": [
+    {
+      "id": "SIG-01",
+      "category": "CAPACITY GAP",
+      "title": "Digital Cooperative Operations (CMDO-2026-B04)",
+      "description": "42 registered nominations vs 30 allocated seats at ICM Chennai.",
+      "impactText": "12-seat shortage detected in high-demand regional sector.",
+      "actionText": "Review Capacity & Reallocate",
+      "actionModal": "capacity_recommendation",
+      "severity": "HIGH"
+    },
+    {
+      "id": "SIG-02",
+      "category": "TRAINER CONFLICT",
+      "title": "Dr. Priya Raman Double Booking",
+      "description": "Assigned to Batch B04 (Room 2) and Batch B06 (Room 4) simultaneously.",
+      "impactText": "10:00 AM – 11:00 AM Monday schedule collision.",
+      "actionText": "Resolve Trainer Conflict",
+      "actionModal": "timetable_conflict",
+      "severity": "HIGH"
+    },
+    {
+      "id": "SIG-03",
+      "category": "HOSTEL PRESSURE",
+      "title": "Hostel Block A Occupancy at 96%",
+      "description": "221 of 240 total beds occupied across active batches.",
+      "impactText": "Only 8 beds remaining for incoming 12 Sep batch.",
+      "actionText": "View Bed Allocation",
+      "actionModal": "hostel_drawer",
+      "severity": "MEDIUM"
+    },
+    {
+      "id": "SIG-04",
+      "category": "LOW ATTENDANCE SIGNAL",
+      "title": "Batch CMDO-2026-B07 Attendance Warning",
+      "description": "Average attendance dropped to 81% across 3 consecutive modules.",
+      "impactText": "4 trainees identified below 75% threshold.",
+      "actionText": "Inspect Batch Roster",
+      "actionModal": "trainee_drawer",
+      "severity": "MEDIUM"
+    },
+    {
+      "id": "SIG-05",
+      "category": "UNUSED CAPACITY",
+      "title": "ICM Chennai — Lecture Room 4 Underutilised",
+      "description": "Only 38% classroom utilisation recorded this week.",
+      "impactText": "62% unused capacity available for extra sessions.",
+      "actionText": "Optimise Schedule",
+      "actionModal": "optimise_schedule",
+      "severity": "POSITIVE"
+    }
+  ],
+  "resourceExchange": [
+    {
+      "id": "RES-01",
+      "resourceName": "Senior Faculty: Dr. R. Deshmukh (Cyber Audit Specialist)",
+      "sourceInstitute": "VAMNICOM Pune",
+      "availability": "Available 18 hrs/week for guest lectures",
+      "isShareable": true,
+      "type": "Trainer"
+    },
+    {
+      "id": "RES-02",
+      "resourceName": "Smart Classroom Hall 2 (50 Seats)",
+      "sourceInstitute": "ICM Chennai",
+      "availability": "38% utilised this week",
+      "isShareable": true,
+      "type": "Classroom"
+    },
+    {
+      "id": "RES-03",
+      "resourceName": "Biometric Face Recognition Attendance Kiosks (6 units)",
+      "sourceInstitute": "RICM Hyderabad",
+      "availability": "Available for immediate dispatch",
+      "isShareable": true,
+      "type": "Equipment"
+    },
+    {
+      "id": "RES-04",
+      "resourceName": "PACS Digital Banking Lab Capacity (24 seats)",
+      "sourceInstitute": "RICM Bengaluru",
+      "availability": "Open for remote batch enrolment",
+      "isShareable": true,
+      "type": "Programme Capacity"
+    }
+  ],
+  "timetableSessions": [
+    {
+      "id": "TS-01",
+      "timeSlot": "09:00 AM – 10:00 AM",
+      "programme": "Cooperative Management (CMDO-B04)",
+      "batch": "CMDO-B04",
+      "trainer": "Dr. Priya Raman",
+      "room": "Room 2",
+      "day": "Monday",
+      "category": "Cooperative Law"
+    },
+    {
+      "id": "TS-02",
+      "timeSlot": "10:00 AM – 11:00 AM",
+      "programme": "Digital Operations & Cyber Audit",
+      "batch": "CMDO-B04",
+      "trainer": "Dr. Priya Raman",
+      "room": "Room 2",
+      "day": "Monday",
+      "category": "Digital Operations",
+      "hasConflict": true,
+      "conflictDetails": "Dr. Priya Raman double-booked for Batch B06 in Room 4 at 10:00 AM."
+    },
+    {
+      "id": "TS-03",
+      "timeSlot": "11:15 AM – 12:15 PM",
+      "programme": "PACS Double-Entry Accounting",
+      "batch": "PFL-B02",
+      "trainer": "Mr. Arun Kumar",
+      "room": "Room 1",
+      "day": "Monday",
+      "category": "Accounting"
+    },
+    {
+      "id": "TS-04",
+      "timeSlot": "02:00 PM – 03:30 PM",
+      "programme": "Cooperative Audit & Statutory Filing",
+      "batch": "CMDO-B04",
+      "trainer": "Dr. Kavitha S.",
+      "room": "Room 3",
+      "day": "Tuesday",
+      "category": "PACS Audit"
+    }
+  ],
+  "trainerCapacity": [
+    {
+      "id": "TR-FAC-01",
+      "name": "Dr. Priya Raman",
+      "specialisation": "Cooperative Management & Governance",
+      "activeBatches": 2,
+      "utilisation": 91,
+      "nextAvailable": "14 Sep 2026",
+      "status": "High Load",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
+    },
+    {
+      "id": "TR-FAC-02",
+      "name": "Mr. Kumar",
+      "specialisation": "Digital Operations & Micro-ATMs",
+      "activeBatches": 2,
+      "utilisation": 78,
+      "nextAvailable": "Today",
+      "status": "Available",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+    },
+    {
+      "id": "TR-FAC-03",
+      "name": "Dr. Kavitha S.",
+      "specialisation": "Dairy Cooperatives & Financial Audit",
+      "activeBatches": 3,
+      "utilisation": 96,
+      "nextAvailable": "20 Sep 2026",
+      "status": "Overloaded",
+      "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200"
+    }
+  ]
+}

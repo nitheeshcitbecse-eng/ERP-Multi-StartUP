@@ -54,7 +54,7 @@ export const getRoleNav = (role, language) => {
           key: 'programmes',
           label: L('Programmes', 'திட்டங்கள்', 'कार्यक्रम', 'కార్యక్రమాలు', 'কর্মসূচী'),
           items: [
-            i('admin_programmes', L('Programmes', 'பயிற்சி திட்டங்கள்', 'कार्यक्रम', 'శిక్షణ కార్యక్రమాలు', 'প্রশিক্ষণ কর্মসূচী'), BookOpen),
+            i('admin_programmes', L('Courses', 'பாடநெறிகள்', 'पाठ्यक्रम', 'కోర్సులు', 'কোর্স'), BookOpen),
             i('admin_nominations', L('Nominations Control', 'பரிந்துரை கட்டுப்பாடு', 'नामांकन नियंत्रण', 'నామినేషన్ నియంత్రణ', 'মনোনয়ন নিয়ন্ত্রণ'), UserCheck),
             i('admin_timetable', L('Smart Timetable', 'அறிவார்ந்த அட்டவணை', 'स्मार्ट समय सारणी', 'స్మార్ట్ టైమ్‌టేబుల్', 'স্মার্ট সময়সূচী'), CalendarDays),
             i('admin_certification', L('Certification Pipeline', 'சான்றிதழ் குழாய்', 'प्रमाणन पाइपलाइन', 'ధృవీకరణ వ్యవస్థ', 'সার্টিফিকেশন পাইপলাইন'), BadgeCheck),

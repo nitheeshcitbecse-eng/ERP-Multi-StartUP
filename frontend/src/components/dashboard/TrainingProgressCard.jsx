@@ -1,9 +1,23 @@
 import React from 'react';
 import { Award, BookOpen, Calendar, FileText, Wrench } from 'lucide-react';
+import { useApp } from '../../context/SystemStateContext';
 
 export const TrainingProgressCard = () => {
+  const { courses } = useApp();
+
+  // Module completion across every course the institute has published.
+  const totalModules = courses.reduce((sum, c) => sum + c.totalModules, 0);
+  const completedModules = courses.reduce((sum, c) => sum + c.completedModules, 0);
+  const modulePercentage = totalModules ? Math.round((completedModules * 100) / totalModules) : 0;
+
   const metrics = [
-    { label: 'Learning Modules', percentage: 78, color: 'bg-emerald-500', icon: BookOpen, subtext: '3 of 5 courses done' },
+    {
+      label: 'Learning Modules',
+      percentage: modulePercentage,
+      color: 'bg-emerald-500',
+      icon: BookOpen,
+      subtext: totalModules ? `${completedModules} of ${totalModules} modules done` : 'No courses published yet',
+    },
     { label: 'Attendance Rate', percentage: 92, color: 'bg-teal-500', icon: Calendar, subtext: '23 of 25 sessions' },
     { label: 'Assessment Avg', percentage: 64, color: 'bg-indigo-600', icon: FileText, subtext: '6 tests completed' },
     { label: 'Practical Labs', percentage: 71, color: 'bg-amber-500', icon: Wrench, subtext: 'PACS ERP labs' },
@@ -15,7 +29,9 @@ export const TrainingProgressCard = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">Overall Training Progress</h3>
-          <p className="text-xs text-slate-500">Cooperative Management & Digital Operations</p>
+          <p className="text-xs text-slate-500">
+            {courses.length ? `${courses.length} ${courses.length === 1 ? 'course' : 'courses'} from your institute` : 'Across your programme'}
+          </p>
         </div>
         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold">
           <Award className="w-3.5 h-3.5 text-indigo-600" />

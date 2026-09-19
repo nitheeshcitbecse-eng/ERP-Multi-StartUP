@@ -59,6 +59,9 @@ app.add_middleware(
 | POST | `/trainee/booster-quiz` | `{ score }` | Booster quiz dialog |
 | POST | `/attendance/check-in` | `{ method: "face" \| "qr" }` | Face ID attendance dialog |
 | POST | `/trainee/career-applications` | `{ opportunity_id }` | Career opportunity dialog |
+| GET | `/trainee/courses` | — | Refreshes *My Courses* after an admin edits courses |
+| POST | `/trainee/courses/{id}/modules/{module_id}/complete` | — | *Mark complete* on My Courses |
+| DELETE | `/trainee/courses/{id}/modules/{module_id}/complete` | — | *Mark as not done* on My Courses |
 
 ### Trainer — `api.js → trainerService`
 
@@ -76,7 +79,10 @@ app.add_middleware(
 | Method | Path | Body | Used by |
 |---|---|---|---|
 | GET | `/admin/dashboard?institute=` | — | All admin pages (§5) |
-| POST | `/admin/programmes` | `{ title, code, seats }` | Create programme dialog |
+| GET | `/admin/courses` | — | Courses page |
+| POST | `/admin/courses` | Course payload (§6) | Course editor (new) |
+| PUT | `/admin/courses/{id}` | Course payload (§6) | Course editor (edit) |
+| DELETE | `/admin/courses/{id}` | — | Courses page delete dialog |
 | POST | `/admin/timetable/sessions` | `{ trainer, room, time_slot }` | Schedule session dialog |
 | POST | `/admin/nominations/conflicts/{id}/resolve` | `{ resolution }` | Nomination conflict dialog |
 | POST | `/admin/resource-requests` | `{ source_institute }` | Resource exchange dialog |
@@ -94,11 +100,11 @@ Each dashboard endpoint returns one object. The exact field shapes are the mock 
 
 | Endpoint | Keys | Mock source |
 |---|---|---|
-| `GET /trainee/dashboard` | `trainee, hostelLogistics, nominationInfo, learningJourneyStages, courses, assessments, skills, aiRecommendation, closedLoopIntervention, certificates, attendance, careerOpportunities, careerReadiness, gamification, upcomingSchedule, notifications` | `data/mockData.js` |
+| `GET /trainee/dashboard` | `trainee, hostelLogistics, nominationInfo, courses, assessments, aiRecommendation, closedLoopIntervention, certificates, attendance, careerOpportunities, careerReadiness, gamification, upcomingSchedule, notifications` | `data/mockData.js` |
 | `GET /trainer/dashboard` | `trainer, batchHealth, priorityInsights, traineeRiskList, silentWeakSpots, interventions, topicHeatmap, competencyEvidenceClaims, trainerNotes` | `data/mockTrainerData.js` |
-| `GET /admin/dashboard` | `admin, networkInstitutes, operationalSignals, demandSignals, programmeOperations, nominationConflicts, timetableSessions, hostelBlocks, hostelAllocations, logisticsChecklist, trainerCapacity, resourceExchange` | `data/mockAdminData.js` |
+| `GET /admin/dashboard` | `admin, networkInstitutes, operationalSignals, demandSignals, adminCourses, nominationConflicts, timetableSessions, hostelBlocks, hostelAllocations, logisticsChecklist, trainerCapacity, resourceExchange` | `data/mockAdminData.js` |
 
-For example, `mockTrainee` in `mockData.js` is the shape of `trainee`, and `mockCourses` is the shape of `courses`.
+For example, `mockTrainee` in `mockData.js` is the shape of `trainee`. Courses have no mock data: see §6.
 
 Which dashboards are loaded after sign-in:
 
@@ -110,7 +116,36 @@ Which dashboards are loaded after sign-in:
 
 If the primary dashboard fails, the user sees an error screen with **Try again**. Failures of the extra dashboards are logged to the console only.
 
-## 6. Minimal FastAPI skeleton
+## 6. Courses
+
+Courses come only from institution admins; there is no demo course data.
+
+- An admin creates, edits and deletes the courses of **their own institute** (`users.institute`).
+- Trainees see only courses that are **published** by their institute's admin (`courses` in `GET /trainee/dashboard`). Drafts and archived courses are hidden.
+- Progress is stored per trainee and module, so editing a course keeps progress for modules that still exist.
+
+Course payload (`POST`/`PUT /admin/courses`):
+
+```json
+{
+  "title": "Cooperative Accounting Essentials",
+  "code": "CAE-101",
+  "category": "Finance & Accounts",
+  "description": "…",
+  "trainer_name": "Dr. Priya Raman",
+  "start_date": "2026-10-01",
+  "end_date": "2026-10-31",
+  "seats": 40,
+  "status": "draft | published | archived",
+  "modules": [{ "id": "existing id or null", "title": "Ledgers", "duration_minutes": 45, "topics": ["Double entry"] }]
+}
+```
+
+Errors: `409` when the code is already used at the institute, `422` for invalid fields (for example an end date before the start date), `404` for a course of another institute.
+
+Admin responses (`adminCourses`) use camelCase and add `id, institute, learners, schedule, createdAt, updatedAt`; `schedule` is `Unscheduled | Upcoming | Ongoing | Completed`. Trainee responses add `instructor, progress, totalModules, completedModules, remainingMinutes, nextModuleId`, and each module has `status: completed | in_progress | upcoming`.
+
+## 7. Minimal FastAPI skeleton
 
 ```python
 from fastapi import APIRouter, Depends, HTTPException
@@ -138,7 +173,7 @@ def trainee_dashboard(creds=Depends(bearer)):
     return build_trainee_dashboard(user)                          # keys as in §5
 ```
 
-## 7. Where to change things
+## 8. Where to change things
 
 | To change | Edit |
 |---|---|

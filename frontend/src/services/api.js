@@ -163,6 +163,143 @@ export const http = {
 export const mockResponse = (data, delay = MOCK_DELAY_MS) =>
   new Promise(resolve => setTimeout(() => resolve(structuredClone(data)), delay));
 
+/* ---------------- Mock course store ---------------- */
+
+/*
+ * Courses exist only once an institution admin creates them, so mock mode starts
+ * with none. This in-memory store mirrors the backend rules for the session:
+ * trainees see only published courses of their own institute.
+ */
+const mockCourseStore = { courses: [], progress: {}, nextId: 1 };
+
+const mockScheduleFor = ({ startDate, endDate }) => {
+  const today = new Date().toISOString().slice(0, 10);
+  if (!startDate) return 'Unscheduled';
+  if (today < startDate) return 'Upcoming';
+  if (endDate && today > endDate) return 'Completed';
+  return 'Ongoing';
+};
+
+const mockAdminCourse = course => ({
+  ...course,
+  schedule: mockScheduleFor(course),
+  learners: Object.keys(mockCourseStore.progress[course.id] ?? {}).length,
+});
+
+const mockTraineeCourse = (course, userId) => {
+  const done = new Set(mockCourseStore.progress[course.id]?.[userId] ?? []);
+  let currentFound = false;
+  const modules = course.modules.map(m => {
+    let status = 'upcoming';
+    if (done.has(m.id)) status = 'completed';
+    else if (!currentFound) {
+      status = 'in_progress';
+      currentFound = true;
+    }
+    return { ...m, status };
+  });
+  const completedModules = modules.filter(m => m.status === 'completed').length;
+  return {
+    id: course.id,
+    title: course.title,
+    code: course.code,
+    category: course.category,
+    description: course.description,
+    instructor: course.trainerName,
+    institute: course.institute,
+    startDate: course.startDate || null,
+    endDate: course.endDate || null,
+    schedule: mockScheduleFor(course),
+    totalModules: modules.length,
+    completedModules,
+    progress: modules.length ? Math.round((completedModules * 100) / modules.length) : 0,
+    remainingMinutes: modules.filter(m => m.status !== 'completed').reduce((sum, m) => sum + m.durationMinutes, 0),
+    nextModuleId: modules.find(m => m.status === 'in_progress')?.id ?? null,
+    modules,
+  };
+};
+
+/** The signed-in user saved by authService (read lazily, as authService is defined below). */
+const mockCurrentUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) ?? {};
+  } catch {
+    return {};
+  }
+};
+
+const mockTraineeCourses = () => {
+  const user = mockCurrentUser();
+  return mockCourseStore.courses
+    .filter(c => c.status === 'published' && c.institute === user.institute)
+    .map(c => mockTraineeCourse(c, user.id));
+};
+
+/** Converts the course editor form to the API payload (snake_case, numbers, null for blanks). */
+const coursePayload = course => ({
+  title: course.title,
+  code: course.code,
+  category: course.category || null,
+  description: course.description || null,
+  trainer_name: course.trainerName || null,
+  start_date: course.startDate || null,
+  end_date: course.endDate || null,
+  seats: Number(course.seats),
+  status: course.status,
+  modules: course.modules.map(m => ({
+    id: m.id || null,
+    title: m.title,
+    duration_minutes: Number(m.durationMinutes),
+    topics: m.topics,
+  })),
+});
+
+const mockSaveCourse = (course, courseId) => {
+  const { institute } = mockCurrentUser();
+  const existing = mockCourseStore.courses.find(c => c.id === courseId);
+  const duplicate = mockCourseStore.courses.find(
+    c => c.id !== courseId && c.institute === institute && c.code.toLowerCase() === course.code.trim().toLowerCase()
+  );
+  if (duplicate) {
+    return Promise.reject(new ApiError(`A course with code "${course.code}" already exists at your institute.`, 409));
+  }
+
+  const now = new Date().toISOString();
+  const saved = {
+    ...course,
+    id: courseId ?? mockCourseStore.nextId++,
+    title: course.title.trim(),
+    code: course.code.trim(),
+    institute,
+    seats: Number(course.seats),
+    startDate: course.startDate || null,
+    endDate: course.endDate || null,
+    modules: course.modules.map(m => ({
+      ...m,
+      id: m.id || Math.random().toString(16).slice(2, 14),
+      durationMinutes: Number(m.durationMinutes),
+    })),
+    createdAt: existing?.createdAt ?? now,
+    updatedAt: now,
+  };
+  mockCourseStore.courses = existing
+    ? mockCourseStore.courses.map(c => (c.id === courseId ? saved : c))
+    : [saved, ...mockCourseStore.courses];
+  return mockResponse(mockAdminCourse(saved));
+};
+
+const mockSetModuleCompleted = (courseId, moduleId, completed) => {
+  const course = mockCourseStore.courses.find(c => c.id === courseId);
+  if (!course) return Promise.reject(new ApiError('Course not found', 404));
+  const { id: userId } = mockCurrentUser();
+  const byTrainee = (mockCourseStore.progress[courseId] ??= {});
+  const done = new Set(byTrainee[userId] ?? []);
+  if (completed) done.add(moduleId);
+  else done.delete(moduleId);
+  byTrainee[userId] = course.modules.map(m => m.id).filter(id => done.has(id));
+  return mockResponse(mockTraineeCourse(course, userId));
+};
+
 const { mockTrainee } = traineeMock;
 const { mockTrainer } = trainerMock;
 const { mockAdmin } = adminMock;
@@ -268,21 +405,31 @@ export const authService = {
  *   POST  /trainee/booster-quiz                 { score }                      -> { score, status }
  *   POST  /attendance/check-in                  { method: "face" | "qr" }      -> { status, timestamp }
  *   POST  /trainee/career-applications          { opportunity_id }             -> { status }
+ *   GET   /trainee/courses                                                     -> TraineeCourse[]
+ *   POST  /trainee/courses/{id}/modules/{moduleId}/complete                    -> TraineeCourse
+ *   DELETE /trainee/courses/{id}/modules/{moduleId}/complete                   -> TraineeCourse
+ *
+ * `courses` holds only the published courses created by the admin of the trainee's
+ * institute (there is no demo course data). TraineeCourse:
+ *   { id, title, code, category, description, instructor, institute, startDate, endDate,
+ *     schedule, totalModules, completedModules, progress, remainingMinutes, nextModuleId,
+ *     modules: [{ id, title, durationMinutes, topics, status }] }
  *
  * TraineeDashboard keys (camelCase, as the UI expects):
- *   trainee, hostelLogistics, nominationInfo, learningJourneyStages, courses, assessments,
- *   skills, aiRecommendation, closedLoopIntervention, certificates, attendance,
+ *   trainee, hostelLogistics, nominationInfo, courses, assessments,
+ *   aiRecommendation, closedLoopIntervention, certificates, attendance,
  *   careerOpportunities, careerReadiness, gamification, upcomingSchedule, notifications
+ *
+ * The trainee's skills, learning path and journey are not sent: the UI builds them
+ * from `courses` and the modules completed (utils/traineeRecord.js).
  */
 
 const traineeMockDashboard = () => ({
   trainee: traineeMock.mockTrainee,
   hostelLogistics: traineeMock.mockHostelLogistics,
   nominationInfo: traineeMock.mockNominationInfo,
-  learningJourneyStages: traineeMock.mockLearningJourneyStages,
-  courses: traineeMock.mockCourses,
+  courses: mockTraineeCourses(),
   assessments: traineeMock.mockAssessments,
-  skills: traineeMock.mockSkills,
   aiRecommendation: traineeMock.mockAIRecommendation,
   closedLoopIntervention: traineeMock.mockClosedLoopIntervention,
   certificates: traineeMock.mockCertificates,
@@ -320,6 +467,18 @@ export const traineeService = {
     return USE_MOCK
       ? mockResponse({ status: 'submitted' })
       : http.post('/trainee/career-applications', { opportunity_id: opportunityId });
+  },
+
+  /** Published courses of the signed-in user's institute, with their own progress. */
+  getCourses() {
+    return USE_MOCK ? mockResponse(mockTraineeCourses()) : http.get('/trainee/courses');
+  },
+
+  /** Marks a module complete (or reopens it). Resolves to the updated course. */
+  setModuleCompleted(courseId, moduleId, completed = true) {
+    if (USE_MOCK) return mockSetModuleCompleted(courseId, moduleId, completed);
+    const path = `/trainee/courses/${courseId}/modules/${encodeURIComponent(moduleId)}/complete`;
+    return completed ? http.post(path) : http.delete(path);
   },
 };
 
@@ -399,15 +558,24 @@ export const trainerService = {
  * Institution admin endpoints (FastAPI).
  *
  *   GET  /admin/dashboard                          ?institute=ICM Chennai -> AdminDashboard (see keys below)
- *   POST /admin/programmes                         { title, code, seats }            -> Programme
+ *   GET    /admin/courses                                                          -> AdminCourse[]
+ *   POST   /admin/courses                          CoursePayload                      -> AdminCourse (201)
+ *   PUT    /admin/courses/{id}                     CoursePayload                      -> AdminCourse
+ *   DELETE /admin/courses/{id}                                                        -> 204
  *   POST /admin/timetable/sessions                 { trainer, room, time_slot }      -> Session
  *   POST /admin/nominations/conflicts/{id}/resolve { resolution }                    -> { status }
  *   POST /admin/resource-requests                  { resource_id?, note? }           -> { status }
  *
  * AdminDashboard keys:
- *   admin, networkInstitutes, operationalSignals, demandSignals, programmeOperations,
+ *   admin, networkInstitutes, operationalSignals, demandSignals, adminCourses,
  *   nominationConflicts, timetableSessions, hostelBlocks, hostelAllocations,
  *   logisticsChecklist, trainerCapacity, resourceExchange
+ *
+ * Courses are scoped to the admin's own institute. CoursePayload:
+ *   { title, code, category?, description?, trainer_name?, start_date?, end_date?, seats,
+ *     status: "draft" | "published" | "archived",
+ *     modules: [{ id?, title, duration_minutes, topics: string[] }] }
+ * AdminCourse is the same in camelCase, plus { id, institute, learners, schedule, createdAt, updatedAt }.
  */
 
 const adminMockDashboard = () => ({
@@ -415,7 +583,7 @@ const adminMockDashboard = () => ({
   networkInstitutes: adminMock.mockNetworkInstitutes,
   operationalSignals: adminMock.mockOperationalSignals,
   demandSignals: adminMock.mockDemandSignals,
-  programmeOperations: adminMock.mockProgrammeOperations,
+  adminCourses: mockCourseStore.courses.map(mockAdminCourse),
   nominationConflicts: adminMock.mockNominationConflicts,
   timetableSessions: adminMock.mockTimetableSessions,
   hostelBlocks: adminMock.mockHostelBlocks,
@@ -432,10 +600,26 @@ export const adminService = {
     return USE_MOCK ? mockResponse(adminMockDashboard()) : http.get('/admin/dashboard', { params: { institute } });
   },
 
-  createProgramme({ title, code, seats }) {
-    return USE_MOCK
-      ? mockResponse({ title, code, seats: Number(seats) })
-      : http.post('/admin/programmes', { title, code, seats: Number(seats) });
+  getCourses() {
+    return USE_MOCK ? mockResponse(mockCourseStore.courses.map(mockAdminCourse)) : http.get('/admin/courses');
+  },
+
+  /** `course` is the editor form (camelCase). Resolves to the saved AdminCourse. */
+  createCourse(course) {
+    return USE_MOCK ? mockSaveCourse(course) : http.post('/admin/courses', coursePayload(course));
+  },
+
+  updateCourse(courseId, course) {
+    return USE_MOCK ? mockSaveCourse(course, courseId) : http.put(`/admin/courses/${courseId}`, coursePayload(course));
+  },
+
+  deleteCourse(courseId) {
+    if (USE_MOCK) {
+      mockCourseStore.courses = mockCourseStore.courses.filter(c => c.id !== courseId);
+      delete mockCourseStore.progress[courseId];
+      return mockResponse(null);
+    }
+    return http.delete(`/admin/courses/${courseId}`);
   },
 
   scheduleSession({ trainer, room, time }) {
@@ -465,11 +649,11 @@ export const adminService = {
  *   POST /ai/chat   { role, message, language }
  *     -> { reply, action_text?, action_modal?, action_tab?, evidence_badge? }
  *
- * In mock mode the assistant drawers answer from their built-in rule-based
- * responses, so `isEnabled` is false and `sendMessage` is not called.
+ * The assistant drawers answer from their built-in rule-based responses unless
+ * VITE_USE_AI_BACKEND=true (and mock mode is off); only then is `sendMessage` called.
  */
 export const aiService = {
-  isEnabled: !USE_MOCK,
+  isEnabled: !USE_MOCK && import.meta.env.VITE_USE_AI_BACKEND === 'true',
 
   async sendMessage({ role, message, language }) {
     const res = await http.post('/ai/chat', { role, message, language });

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Check, ShieldCheck, Sparkles } from 'lucide-react';
-import { useData } from '../../context/SystemStateContext';
+import { useApp } from '../../context/SystemStateContext';
 
 export const LearningJourneyTimeline = () => {
-  const { learningJourneyStages } = useData();
-  const [selectedStage, setSelectedStage] = useState(
-    learningJourneyStages.find(s => s.status === 'current') || learningJourneyStages[4]
-  );
+  const { learningJourneyStages } = useApp();
+  const [selectedId, setSelectedId] = useState(null);
+  const currentIndex = learningJourneyStages.findIndex(s => s.status === 'current');
+  const currentStage = learningJourneyStages[currentIndex] ?? learningJourneyStages[learningJourneyStages.length - 1];
+  const selectedStage = learningJourneyStages.find(s => s.id === selectedId) ?? currentStage;
+  const stageNumber = currentIndex === -1 ? learningJourneyStages.length : currentIndex + 1;
 
   return (
     <div className="ncct-card p-5 space-y-4">
@@ -20,13 +22,13 @@ export const LearningJourneyTimeline = () => {
             </span>
           </div>
           <p className="text-xs text-slate-500">
-            From initial PAC registration to verified career placement. Click any stage to inspect milestones.
+            Your progress so far, from registration to completing your courses. Click any stage to see details.
           </p>
         </div>
 
         <div className="flex items-center gap-1.5 text-xs text-indigo-700 font-semibold bg-indigo-50 px-3 py-1 rounded-lg">
           <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-          <span>Stage 5 of 8: Skill Development</span>
+          <span>Stage {stageNumber} of {learningJourneyStages.length}: {currentStage.name}</span>
         </div>
       </div>
 
@@ -35,7 +37,7 @@ export const LearningJourneyTimeline = () => {
         {/* Connection Line */}
         <div className="absolute top-7 left-4 right-4 h-1 bg-slate-200 -z-0 rounded" />
         
-        <div className="flex items-center justify-between min-w-[700px] px-2 relative z-10">
+        <div className="flex items-center justify-between min-w-[560px] px-2 relative z-10">
           {learningJourneyStages.map((stage, index) => {
             const isCompleted = stage.status === 'completed';
             const isCurrent = stage.status === 'current';
@@ -44,7 +46,7 @@ export const LearningJourneyTimeline = () => {
             return (
               <button
                 key={stage.id}
-                onClick={() => setSelectedStage(stage)}
+                onClick={() => setSelectedId(stage.id)}
                 className="flex flex-col items-center gap-2 group focus:outline-hidden"
               >
                 {/* Node Circle */}
@@ -104,7 +106,6 @@ export const LearningJourneyTimeline = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-indigo-900">
               Stage: {selectedStage.name}
             </span>
-            <span className="text-xs text-slate-500 tabular-nums">• {selectedStage.date}</span>
           </div>
           <p className="text-xs text-slate-700 font-medium">{selectedStage.description}</p>
         </div>
@@ -112,7 +113,7 @@ export const LearningJourneyTimeline = () => {
         <div className="flex items-center gap-3 bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-2xs text-xs">
           <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
           <div>
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Verified Milestone</span>
+            <span className="text-[10px] text-slate-400 uppercase font-bold block">Milestone</span>
             <span className="font-semibold text-slate-800">{selectedStage.milestone}</span>
           </div>
         </div>

@@ -37,7 +37,7 @@ import { TrainerNotificationsPage } from '../pages/Trainer/TrainerNotificationsP
 
 // Admin Pages
 import { AdminOverviewPage } from '../pages/Admin/AdminOverviewPage';
-import { AdminProgrammesPage } from '../pages/Admin/AdminProgrammesPage';
+import { AdminCoursesPage } from '../pages/Admin/AdminCoursesPage';
 import { AdminNominationsPage } from '../pages/Admin/AdminNominationsPage';
 import { AdminTimetablePage } from '../pages/Admin/AdminTimetablePage';
 import { AdminCertificationPage } from '../pages/Admin/AdminCertificationPage';
@@ -85,7 +85,7 @@ const PAGE_COMPONENTS = {
   },
   admin: {
     admin_overview: AdminOverviewPage,
-    admin_programmes: AdminProgrammesPage,
+    admin_programmes: AdminCoursesPage,
     admin_nominations: AdminNominationsPage,
     admin_timetable: AdminTimetablePage,
     admin_certification: AdminCertificationPage,

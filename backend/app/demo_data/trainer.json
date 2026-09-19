@@ -1,0 +1,443 @@
+{
+  "batchHealth": {
+    "overallScore": 82,
+    "breakdown": {
+      "attendance": 92,
+      "learningActivity": 78,
+      "assessment": 74,
+      "skillProgress": 81,
+      "engagement": 85
+    },
+    "statusText": "Healthy Batch Learning Trajectory",
+    "primaryImprovementArea": "Assessment performance in Financial Accounting"
+  },
+  "competencyEvidenceClaims": [
+    {
+      "id": "claim-1",
+      "traineeName": "Arun Kumar",
+      "digitalId": "NCCT-TR-2026-004281",
+      "competencyName": "Financial Analysis & Accounting",
+      "assessmentScore": 74,
+      "practicalScore": 78,
+      "projectStatus": "Completed",
+      "status": "pending"
+    },
+    {
+      "id": "claim-2",
+      "traineeName": "Meena Sundaram",
+      "digitalId": "NCCT-TR-2026-004282",
+      "competencyName": "Cooperative Management",
+      "assessmentScore": 82,
+      "practicalScore": 85,
+      "projectStatus": "Completed",
+      "status": "verified"
+    },
+    {
+      "id": "claim-3",
+      "traineeName": "Rahul Patel",
+      "digitalId": "NCCT-TR-2026-004283",
+      "competencyName": "Digital Operations & ERP",
+      "assessmentScore": 78,
+      "practicalScore": 80,
+      "projectStatus": "Completed",
+      "status": "pending"
+    }
+  ],
+  "interventions": [
+    {
+      "id": "int-101",
+      "topic": "Cooperative Accounting & Ratio Analysis Booster",
+      "affectedTraineesCount": 7,
+      "traineesList": [
+        "Arun Kumar",
+        "Meena Sundaram",
+        "Rahul Patel",
+        "Venkatesh S",
+        "Deepa M",
+        "Anand K",
+        "Suresh R"
+      ],
+      "beforeScore": 48,
+      "afterScore": 74,
+      "status": "active",
+      "createdDate": "15 Sep 2026",
+      "deadline": "18 Sep 2026",
+      "trainerMessage": "Please complete this 20-minute booster module before tomorrow's revision session.",
+      "durationMinutes": 20,
+      "improvementPoints": 26
+    },
+    {
+      "id": "int-102",
+      "topic": "PACS ERP Digital Loan Disbursement Lab",
+      "affectedTraineesCount": 5,
+      "traineesList": [
+        "Rahul Patel",
+        "Kavitha P",
+        "Balaji M",
+        "Lakshmi N",
+        "Ganesh K"
+      ],
+      "beforeScore": 52,
+      "afterScore": 78,
+      "status": "completed",
+      "createdDate": "10 Sep 2026",
+      "deadline": "14 Sep 2026",
+      "trainerMessage": "Hands-on practical ERP entry for Kisan Credit Card disbursements.",
+      "durationMinutes": 30,
+      "improvementPoints": 26
+    }
+  ],
+  "priorityInsights": [
+    {
+      "id": "p-1",
+      "level": "high",
+      "title": "7 trainees need urgent attention",
+      "affectedCount": 7,
+      "reason": "Repeated low scores in Cooperative Accounting & Working Capital Ratios",
+      "action": "Review skill gap & assign 20-minute targeted booster",
+      "category": "Academic Weakness"
+    },
+    {
+      "id": "p-2",
+      "level": "medium",
+      "title": "4 trainees are falling behind on LMS activity",
+      "affectedCount": 4,
+      "reason": "Low login frequency & 2 incomplete digital PACS ERP modules",
+      "action": "Send learning reminder & schedule 1-on-1 check-in",
+      "category": "Engagement Risk"
+    },
+    {
+      "id": "p-3",
+      "level": "positive",
+      "title": "11 trainees improved after closed-loop booster",
+      "affectedCount": 11,
+      "reason": "Average assessment score increased by +14% post-intervention",
+      "action": "Validate competency & issue digital badges",
+      "category": "Verified Progress"
+    }
+  ],
+  "silentWeakSpots": [
+    {
+      "id": "sw-1",
+      "topic": "Cooperative Accounting & Working Capital Ratios",
+      "affectedTraineesCount": 7,
+      "averageScore": 48,
+      "attempts": 3,
+      "pattern": "Repeated low scores across 3 consecutive assessments despite 90%+ attendance",
+      "suggestedAction": "Run a 20-minute targeted revision session & assign accounting booster module."
+    },
+    {
+      "id": "sw-2",
+      "topic": "Data Interpretation & PACS Audit Trail",
+      "affectedTraineesCount": 4,
+      "averageScore": 54,
+      "attempts": 2,
+      "pattern": "Low assessment score combined with incomplete practical lab submissions",
+      "suggestedAction": "Assign practical ERP simulation lab exercise & review audit entries."
+    }
+  ],
+  "topicHeatmap": [
+    {
+      "topicName": "Cooperative Principles & Bylaws",
+      "averageScore": 88,
+      "cells": [
+        {
+          "assessmentName": "Test 1",
+          "score": 85,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 2",
+          "score": 88,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 3",
+          "score": 90,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 4",
+          "score": 89,
+          "status": "strong"
+        }
+      ]
+    },
+    {
+      "topicName": "PACS ERP Navigation & Member Entry",
+      "averageScore": 78,
+      "cells": [
+        {
+          "assessmentName": "Test 1",
+          "score": 72,
+          "status": "developing"
+        },
+        {
+          "assessmentName": "Test 2",
+          "score": 76,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 3",
+          "score": 80,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 4",
+          "score": 84,
+          "status": "strong"
+        }
+      ]
+    },
+    {
+      "topicName": "Cooperative Accounting & Ledgers",
+      "averageScore": 48,
+      "cells": [
+        {
+          "assessmentName": "Test 1",
+          "score": 52,
+          "status": "weak"
+        },
+        {
+          "assessmentName": "Test 2",
+          "score": 46,
+          "status": "weak"
+        },
+        {
+          "assessmentName": "Test 3",
+          "score": 44,
+          "status": "weak"
+        },
+        {
+          "assessmentName": "Test 4",
+          "score": 50,
+          "status": "weak"
+        }
+      ]
+    },
+    {
+      "topicName": "Financial Analysis & Ratio Analysis",
+      "averageScore": 49,
+      "cells": [
+        {
+          "assessmentName": "Test 1",
+          "score": 50,
+          "status": "weak"
+        },
+        {
+          "assessmentName": "Test 2",
+          "score": 48,
+          "status": "weak"
+        },
+        {
+          "assessmentName": "Test 3",
+          "score": 46,
+          "status": "weak"
+        },
+        {
+          "assessmentName": "Test 4",
+          "score": 52,
+          "status": "weak"
+        }
+      ]
+    },
+    {
+      "topicName": "Member Grievance & Service ERP",
+      "averageScore": 81,
+      "cells": [
+        {
+          "assessmentName": "Test 1",
+          "score": 78,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 2",
+          "score": 80,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 3",
+          "score": 82,
+          "status": "strong"
+        },
+        {
+          "assessmentName": "Test 4",
+          "score": 84,
+          "status": "strong"
+        }
+      ]
+    }
+  ],
+  "traineeRiskList": [
+    {
+      "id": "tr-004281",
+      "name": "Arun Kumar",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150",
+      "digitalId": "NCCT-TR-2026-004281",
+      "attendance": 92,
+      "assessmentScore": 46,
+      "skillGapTopic": "Financial Analysis & Accounting",
+      "riskLevel": "HIGH",
+      "recommendedAction": "Targeted booster & 1-on-1 trainer revision",
+      "lmsActivity": 71,
+      "lastActivityTime": "2 hours ago",
+      "skills": [
+        {
+          "name": "Cooperative Management",
+          "proficiency": 88
+        },
+        {
+          "name": "Communication",
+          "proficiency": 81
+        },
+        {
+          "name": "Digital Operations",
+          "proficiency": 74
+        },
+        {
+          "name": "Data Interpretation",
+          "proficiency": 63
+        },
+        {
+          "name": "Financial Analysis",
+          "proficiency": 46
+        }
+      ]
+    },
+    {
+      "id": "tr-004282",
+      "name": "Meena Sundaram",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150",
+      "digitalId": "NCCT-TR-2026-004282",
+      "attendance": 78,
+      "assessmentScore": 52,
+      "skillGapTopic": "Cooperative Accounting Ledger",
+      "riskLevel": "MEDIUM",
+      "recommendedAction": "Trainer review & practice module",
+      "lmsActivity": 64,
+      "lastActivityTime": "1 day ago",
+      "skills": [
+        {
+          "name": "Cooperative Management",
+          "proficiency": 82
+        },
+        {
+          "name": "Communication",
+          "proficiency": 91
+        },
+        {
+          "name": "Digital Operations",
+          "proficiency": 70
+        },
+        {
+          "name": "Financial Analysis",
+          "proficiency": 52
+        }
+      ]
+    },
+    {
+      "id": "tr-004283",
+      "name": "Rahul Patel",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
+      "digitalId": "NCCT-TR-2026-004283",
+      "attendance": 65,
+      "assessmentScore": 58,
+      "skillGapTopic": "Digital PACS Operations",
+      "riskLevel": "HIGH",
+      "recommendedAction": "Attendance check-in & lab support",
+      "lmsActivity": 45,
+      "lastActivityTime": "3 days ago",
+      "skills": [
+        {
+          "name": "Cooperative Management",
+          "proficiency": 75
+        },
+        {
+          "name": "Digital Operations",
+          "proficiency": 58
+        }
+      ]
+    },
+    {
+      "id": "tr-004284",
+      "name": "Priya Sharma",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150",
+      "digitalId": "NCCT-TR-2026-004284",
+      "attendance": 98,
+      "assessmentScore": 88,
+      "skillGapTopic": "None (Top Performer)",
+      "riskLevel": "LOW",
+      "recommendedAction": "Assign advanced leadership module",
+      "lmsActivity": 95,
+      "lastActivityTime": "10 mins ago",
+      "skills": [
+        {
+          "name": "Cooperative Management",
+          "proficiency": 94
+        },
+        {
+          "name": "Digital Operations",
+          "proficiency": 90
+        },
+        {
+          "name": "Financial Analysis",
+          "proficiency": 88
+        }
+      ]
+    },
+    {
+      "id": "tr-004285",
+      "name": "Karthik Raja",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150",
+      "digitalId": "NCCT-TR-2026-004285",
+      "attendance": 94,
+      "assessmentScore": 84,
+      "skillGapTopic": "None (On Track)",
+      "riskLevel": "LOW",
+      "recommendedAction": "Verify skill evidence",
+      "lmsActivity": 88,
+      "lastActivityTime": "1 hour ago",
+      "skills": [
+        {
+          "name": "Cooperative Management",
+          "proficiency": 86
+        },
+        {
+          "name": "Digital Operations",
+          "proficiency": 84
+        }
+      ]
+    }
+  ],
+  "trainer": {
+    "id": "tr-0187",
+    "name": "Dr. Priya Raman",
+    "role": "Senior Training Faculty",
+    "trainerId": "NCCT-FAC-2026-0187",
+    "institute": "ICM Chennai (Institute of Cooperative Management)",
+    "department": "Department of Cooperative Management & Audit",
+    "currentProgramme": "Cooperative Management & Digital Operations",
+    "batch": "CMDO-2026-B04",
+    "batchSize": 42,
+    "activeTrainees": 40,
+    "programmeProgress": 68,
+    "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250",
+    "email": "priya.raman.icm@ncct.gov.in"
+  },
+  "trainerNotes": [
+    {
+      "id": "note-1",
+      "traineeId": "tr-004281",
+      "noteText": "Arun is strong in cooperative management concepts but requires additional explanation in working capital ledger ratio calculations.",
+      "createdAt": "15 Sep 2026 • 11:30 AM",
+      "isPrivate": true
+    },
+    {
+      "id": "note-2",
+      "traineeId": "tr-004282",
+      "noteText": "Meena has excellent communication skills. Advised her to focus on statutory audit compliance.",
+      "createdAt": "12 Sep 2026 • 04:15 PM",
+      "isPrivate": true
+    }
+  ]
+}

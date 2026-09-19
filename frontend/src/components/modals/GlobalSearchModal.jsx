@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { Search, X, ChevronRight } from 'lucide-react';
 import { useApp } from '../../context/SystemStateContext';
+import { statusLabel } from '../../utils/courses';
 
 export const GlobalSearchModal = () => {
-  const { activeModal, closeModal, setActiveTab } = useApp();
+  const { activeModal, closeModal, setActiveTab, adminCourses } = useApp();
   const [query, setQuery] = useState('');
 
   if (activeModal !== 'global_search') return null;
 
   const mockSearchResults = [
+    ...adminCourses.map(course => ({
+      type: 'Course',
+      title: `${course.title} (${course.code})`,
+      subtitle: `${statusLabel(course.status)} • ${course.learners}/${course.seats} learners`,
+      tab: 'admin_programmes',
+    })),
     { type: 'Trainee', title: 'Arun Kumar (NCCT-TR-2026-004281)', subtitle: 'Batch CMDO-B04 • ICM Chennai', tab: 'admin_trainees' },
-    { type: 'Programme', title: 'Cooperative Management & Digital Operations (CMDO)', subtitle: '38/40 Seats Filled • Active', tab: 'admin_programmes' },
     { type: 'Trainer', title: 'Dr. Priya Raman (Senior Faculty)', subtitle: 'Specialisation: Cooperative Law & Audit', tab: 'admin_trainers' },
     { type: 'Room', title: 'Lecture Room 4 (ICM Chennai)', subtitle: '38% Utilisation • 62% Unused Capacity', tab: 'admin_capacity' },
     { type: 'Hostel', title: 'Block A (Main Men\'s Hostel)', subtitle: '96% Occupancy Rate • 4 Beds Remaining', tab: 'admin_hostel' },

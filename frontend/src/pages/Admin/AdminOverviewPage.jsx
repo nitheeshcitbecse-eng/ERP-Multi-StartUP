@@ -18,7 +18,7 @@ import { t } from '../../utils/i18n';
 
 export const AdminOverviewPage = () => {
   const { operationalSignals, demandSignals, networkInstitutes } = useData();
-  const { setActiveTab, openModal, setSelectedConflictItem, isOffline, syncData, isSyncing, pendingSyncCount, language } = useApp();
+  const { setActiveTab, openModal, openCourseEditor, setSelectedConflictItem, isOffline, syncData, isSyncing, pendingSyncCount, language } = useApp();
 
   return (
     <div className="space-y-8 pb-16">
@@ -43,7 +43,7 @@ export const AdminOverviewPage = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
-            <button onClick={() => openModal('create_programme')} className="ncct-btn-light">
+            <button onClick={() => openCourseEditor()} className="ncct-btn-light">
               <Plus className="w-4 h-4" />
               <span>{t('btnCreateProg', language)}</span>
             </button>
@@ -194,7 +194,7 @@ export const AdminOverviewPage = () => {
                   if (sig.category === 'TRAINER CONFLICT') {
                     openModal('schedule_session');
                   } else if (sig.category === 'CAPACITY GAP') {
-                    openModal('create_programme');
+                    openCourseEditor();
                   } else if (sig.category === 'HOSTEL PRESSURE') {
                     setActiveTab('admin_hostel');
                   } else {

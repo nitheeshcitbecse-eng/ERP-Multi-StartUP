@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSystemInit } from '../hooks/useSystemInit';
 import { LoadingScreen } from '../components/common/LoadingScreen';
 import { homePathFor, pathForTab, routeFromPath } from '../routes/routePaths';
-import { traineeService, trainerService, syncService, USE_MOCK } from '../services/api';
+import { adminService, traineeService, trainerService, syncService, USE_MOCK } from '../services/api';
+import { journeyStagesFromCourses, learningPathFromCourses, skillsFromCourses } from '../utils/traineeRecord';
 
 /**
  * Global state for the whole app, in three slices:
@@ -67,7 +68,6 @@ export const SystemStateProvider = ({ children }) => {
 
   // Trainee state
   const [closedLoop, setClosedLoop] = useState(data.closedLoopIntervention ?? null);
-  const [skills, setSkills] = useState(data.skills ?? []);
   const [assessments, setAssessments] = useState(data.assessments ?? []);
   const [notifications, setNotifications] = useState(data.notifications ?? []);
   const certificates = data.certificates ?? [];
@@ -79,20 +79,38 @@ export const SystemStateProvider = ({ children }) => {
   const [trainerNotes, setTrainerNotes] = useState(data.trainerNotes ?? []);
   const [traineeRiskList, setTraineeRiskList] = useState(data.traineeRiskList ?? []);
 
+  // Courses: trainees see the published courses of their institute; admins manage their institute's courses.
+  const [courses, setCourses] = useState(data.courses ?? []);
+  const [adminCourses, setAdminCourses] = useState(data.adminCourses ?? []);
+  const [courseBeingEdited, setCourseBeingEdited] = useState(null);
+
+  // True once the editable copies above hold API data (mock data seeds them on the first render).
+  const [isSeeded, setIsSeeded] = useState(USE_MOCK);
+
   // When fresh data arrives from the API, re-seed the editable copies.
   useEffect(() => {
     if (data.dataStatus !== 'ready') return;
+    setIsSeeded(true);
     setClosedLoop(data.closedLoopIntervention ?? null);
-    setSkills(data.skills ?? []);
     setAssessments(data.assessments ?? []);
     setNotifications(data.notifications ?? []);
     setInterventions(data.interventions ?? []);
     setCompetencyClaims(data.competencyEvidenceClaims ?? []);
     setTrainerNotes(data.trainerNotes ?? []);
     setTraineeRiskList(data.traineeRiskList ?? []);
+    setCourses(data.courses ?? []);
+    setAdminCourses(data.adminCourses ?? []);
     setSelectedCertificate(prev => prev ?? data.certificates?.[0] ?? null);
     setSelectedOpportunity(prev => prev ?? data.careerOpportunities?.[0] ?? null);
-  }, [data.dataStatus, data.skills, data.interventions]);
+  }, [data.dataStatus, data.interventions, data.courses, data.adminCourses]);
+
+  // The trainee's skills, learning path and journey come from their own course progress.
+  const skills = useMemo(() => skillsFromCourses(courses), [courses]);
+  const learningPath = useMemo(() => learningPathFromCourses(courses), [courses]);
+  const learningJourneyStages = useMemo(
+    () => journeyStagesFromCourses(courses, auth.user?.institute),
+    [courses, auth.user?.institute]
+  );
 
   const openModal = modalName => setActiveModal(modalName);
   const closeModal = () => setActiveModal(null);
@@ -128,10 +146,6 @@ export const SystemStateProvider = ({ children }) => {
 
     setAssessments(prev =>
       prev.map(a => (a.title.includes('Cooperative Accounting') ? { ...a, score: score, status: 'passed' } : a))
-    );
-
-    setSkills(prev =>
-      prev.map(s => (s.name.includes('Financial Analysis') ? { ...s, proficiency: score, status: 'verified' } : s))
     );
 
     traineeService.submitBoosterQuiz(score).catch(reportFailure('Submit booster quiz'));
@@ -171,6 +185,42 @@ export const SystemStateProvider = ({ children }) => {
     };
     setTrainerNotes(prev => [newNote, ...prev]);
     trainerService.addTraineeNote({ traineeId, text }).catch(reportFailure('Save trainer note'));
+  };
+
+  /* ---------------- Courses ---------------- */
+
+  /** Opens the course editor: pass a course to edit it, or nothing to create one. */
+  const openCourseEditor = (course = null) => {
+    setCourseBeingEdited(course);
+    setActiveModal('course_editor');
+  };
+
+  // Admins preview the trainee portal, so its course list follows their changes.
+  const refreshCourses = () =>
+    traineeService
+      .getCourses()
+      .then(setCourses)
+      .catch(reportFailure('Refresh courses'));
+
+  /** Creates or updates a course. Resolves to the saved course; rejects with the API error. */
+  const saveCourse = async (form, courseId = null) => {
+    const saved = courseId ? await adminService.updateCourse(courseId, form) : await adminService.createCourse(form);
+    setAdminCourses(prev => (courseId ? prev.map(c => (c.id === courseId ? saved : c)) : [saved, ...prev]));
+    refreshCourses();
+    return saved;
+  };
+
+  const deleteCourse = async courseId => {
+    await adminService.deleteCourse(courseId);
+    setAdminCourses(prev => prev.filter(c => c.id !== courseId));
+    setCourses(prev => prev.filter(c => c.id !== courseId));
+  };
+
+  /** Marks a module complete (or reopens it) and stores the course the API returns. */
+  const setModuleCompleted = async (courseId, moduleId, completed = true) => {
+    const updated = await traineeService.setModuleCompleted(courseId, moduleId, completed);
+    setCourses(prev => prev.map(c => (c.id === courseId ? updated : c)));
+    return updated;
   };
 
   const app = {
@@ -218,19 +268,28 @@ export const SystemStateProvider = ({ children }) => {
     addTrainerNote,
     traineeRiskList,
     skills,
+    learningPath,
+    learningJourneyStages,
     assessments,
     certificates,
     opportunities,
     notifications,
     markNotificationAsRead,
     unreadNotificationCount,
+    courses,
+    adminCourses,
+    courseBeingEdited,
+    openCourseEditor,
+    saveCourse,
+    deleteCourse,
+    setModuleCompleted,
   };
 
   // Hold the routes back while a stored session is validated, or while a real backend loads data.
   let content = children;
   if (auth.isRestoring) {
     content = <LoadingScreen />;
-  } else if (auth.isAuthenticated && !USE_MOCK && data.dataStatus !== 'ready') {
+  } else if (auth.isAuthenticated && !USE_MOCK && (data.dataStatus !== 'ready' || !isSeeded)) {
     content = <LoadingScreen error={data.dataStatus === 'error' ? data.dataError : null} onRetry={data.reloadData} />;
   }
 

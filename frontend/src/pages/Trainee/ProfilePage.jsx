@@ -96,8 +96,11 @@ export const ProfilePage = () => {
         </div>
 
         <div className="ncct-card p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900 border-b border-slate-100 pb-3">Verified Skills Ledger Summary</h3>
+          <h3 className="text-lg font-semibold text-slate-900 border-b border-slate-100 pb-3">Skills Ledger Summary</h3>
           <div className="space-y-2">
+            {skills.length === 0 && (
+              <p className="text-xs text-slate-500">No skills yet — they appear as you complete course modules.</p>
+            )}
             {skills.map(s => (
               <div key={s.id} className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                 <div>
